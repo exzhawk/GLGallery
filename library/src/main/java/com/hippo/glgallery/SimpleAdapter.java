@@ -16,7 +16,7 @@
 
 package com.hippo.glgallery;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.hippo.glview.image.ImageTexture;
 import com.hippo.glview.image.ImageWrapper;

@@ -16,8 +16,8 @@
 
 package com.hippo.glgallery;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.UiThread;
+import androidx.annotation.IntDef;
+import androidx.annotation.UiThread;
 import android.util.LruCache;
 
 import com.hippo.glview.glrenderer.GLCanvas;

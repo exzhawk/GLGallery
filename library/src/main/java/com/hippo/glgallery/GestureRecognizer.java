@@ -18,7 +18,7 @@ package com.hippo.glgallery;
 
 import android.content.Context;
 import android.os.SystemClock;
-import android.support.v4.view.GestureDetectorCompat;
+import androidx.core.view.GestureDetectorCompat;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;

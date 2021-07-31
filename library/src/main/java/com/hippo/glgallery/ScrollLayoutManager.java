@@ -18,7 +18,7 @@ package com.hippo.glgallery;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import com.hippo.glview.anim.Animation;
 import com.hippo.glview.anim.FloatAnimation;
