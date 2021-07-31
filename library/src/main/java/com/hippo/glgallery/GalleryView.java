@@ -672,6 +672,12 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
         }
     }
 
+    public void onOverscroll(int next){
+        if (mListener != null) {
+            mListener.onOverScroll(next);
+        }
+    }
+
     private void onSingleTapUpInternal(float x, float y) {
     }
 
@@ -1232,5 +1238,9 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
 
         @RenderThread
         void onLongPressPage(int index);
+
+        @RenderThread
+        void onOverScroll(int next);
+        // 1 for next, -1 for previous
     }
 }

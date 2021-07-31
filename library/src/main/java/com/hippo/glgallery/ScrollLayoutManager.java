@@ -565,6 +565,11 @@ class ScrollLayoutManager extends GalleryView.LayoutManager {
     }
 
     public void overScrollEdge(int dx, int dy, float x, float y) {
+        if (dy > 0) {
+            mGalleryView.onOverscroll(1);
+        } else if (dy < 0) {
+            mGalleryView.onOverscroll(-1);
+        }
         GLEdgeView edgeView = mGalleryView.getEdgeView();
 
         mDeltaX += dx;
@@ -875,6 +880,7 @@ class ScrollLayoutManager extends GalleryView.LayoutManager {
         ///////
         GalleryView galleryView = mGalleryView;
         if (mIndex == 0 && mOffsetY >= 0) {
+            mGalleryView.onOverscroll(-1);
             mOverScroller.overScroll(GLEdgeView.TOP);
         } else {
             // Cancel all animations
@@ -930,6 +936,7 @@ class ScrollLayoutManager extends GalleryView.LayoutManager {
         int bottom = mBottomStateBottom;
         boolean hasNext = mBottomStateHasNext;
         if (!hasNext && bottom <= galleryView.getHeight()) {
+            mGalleryView.onOverscroll(1);
             mOverScroller.overScroll(GLEdgeView.BOTTOM);
         } else {
             // Cancel all animations

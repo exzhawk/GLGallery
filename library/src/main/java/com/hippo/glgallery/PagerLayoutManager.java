@@ -592,6 +592,19 @@ class PagerLayoutManager extends GalleryView.LayoutManager {
     }
 
     public void overScrollEdge(int dx, int dy, float x, float y) {
+        if (mMode == MODE_RIGHT_TO_LEFT) {
+            if (dx > 0) {
+                mGalleryView.onOverscroll(-1);
+            } else if (dx < 0) {
+                mGalleryView.onOverscroll(1);
+            }
+        } else if (mMode == MODE_LEFT_TO_RIGHT) {
+            if (dx < 0) {
+                mGalleryView.onOverscroll(-1);
+            } else if (dx > 0) {
+                mGalleryView.onOverscroll(1);
+            }
+        }
         GLEdgeView edgeView = mGalleryView.getEdgeView();
 
         mDeltaX += dx;
@@ -739,12 +752,14 @@ class PagerLayoutManager extends GalleryView.LayoutManager {
         if (mMode == MODE_LEFT_TO_RIGHT) {
             if (mIndex == 0) {
                 mOverScroller.overScroll(GLEdgeView.LEFT);
+                mGalleryView.onOverscroll(-1);
             } else {
                 setCurrentIndex(mIndex - 1);
             }
         } else {
             if (mIndex >= size - 1) {
                 mOverScroller.overScroll(GLEdgeView.LEFT);
+                mGalleryView.onOverscroll(1);
             } else {
                 setCurrentIndex(mIndex + 1);
             }
@@ -761,12 +776,14 @@ class PagerLayoutManager extends GalleryView.LayoutManager {
         if (mMode == MODE_LEFT_TO_RIGHT) {
             if (mIndex >= size - 1) {
                 mOverScroller.overScroll(GLEdgeView.RIGHT);
+                mGalleryView.onOverscroll(1);
             } else {
                 setCurrentIndex(mIndex + 1);
             }
         } else {
             if (mIndex == 0) {
                 mOverScroller.overScroll(GLEdgeView.RIGHT);
+                mGalleryView.onOverscroll(-1);
             } else {
                 setCurrentIndex(mIndex - 1);
             }
