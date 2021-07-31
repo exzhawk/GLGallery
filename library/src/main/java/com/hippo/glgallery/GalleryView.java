@@ -696,6 +696,7 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
             return;
         }
 
+        boolean doPage = true;
         GalleryPageView page = findPageUnder(x, y);
         if (page != null &&
             page.getIndex() != GalleryPageView.INVALID_INDEX &&
@@ -713,9 +714,27 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
                 mListener.onTapMenuArea();
             }
         } else if (mLeftArea.contains((int) x, (int) y)) {
-            mLayoutManager.onPageLeft();
+            if (mListener != null) {
+                if (mLayoutMode == LAYOUT_RIGHT_TO_LEFT) {
+                    doPage = mListener.onTapPageArea(1);
+                } else {
+                    doPage = mListener.onTapPageArea(-1);
+                }
+            }
+            if (doPage) {
+                mLayoutManager.onPageLeft();
+            }
         } else if (mRightArea.contains((int) x, (int) y)) {
-            mLayoutManager.onPageRight();
+            if (mListener != null) {
+                if (mLayoutMode == LAYOUT_RIGHT_TO_LEFT) {
+                    doPage = mListener.onTapPageArea(-1);
+                } else {
+                    doPage = mListener.onTapPageArea(1);
+                }
+            }
+            if (doPage) {
+                mLayoutManager.onPageRight();
+            }
         }
     }
 
@@ -1239,8 +1258,19 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
         @RenderThread
         void onLongPressPage(int index);
 
+        /**
+         * triggered when over scroll.
+         * @param next 1 for next, -1 for previous
+         */
         @RenderThread
         void onOverScroll(int next);
-        // 1 for next, -1 for previous
+
+        /**
+         * triggered when tap page area.
+         * @param next 1 for next, -1 for previous
+         * @return false to prevent page.
+         */
+        @RenderThread
+        boolean onTapPageArea(int next);
     }
 }
