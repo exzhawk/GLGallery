@@ -66,6 +66,7 @@ class ScrollLayoutManager extends GalleryView.LayoutManager {
     private boolean mStopAnimationFinger;
 
     private int mInterval;
+    private boolean mSnap;
 
     private final PageFling mPageFling;
     private final SmoothScaler mSmoothScaler;
@@ -77,10 +78,11 @@ class ScrollLayoutManager extends GalleryView.LayoutManager {
     private int mBottomStateBottom;
     private boolean mBottomStateHasNext;
 
-    public ScrollLayoutManager(Context context, @NonNull GalleryView galleryView, int interval) {
+    public ScrollLayoutManager(Context context, @NonNull GalleryView galleryView, int interval, boolean snap) {
         super(galleryView);
 
         mInterval = interval;
+        mSnap = snap;
         mPageFling = new PageFling(context);
         mSmoothScaler = new SmoothScaler();
         mOverScroller = new OverScroller();
@@ -101,6 +103,10 @@ class ScrollLayoutManager extends GalleryView.LayoutManager {
         } else {
             mInterval = interval;
         }
+    }
+
+    public void setSnapPageWhenScroll(boolean snap){
+        mSnap = snap;
     }
 
     private void resetParameters() {
@@ -1030,9 +1036,11 @@ class ScrollLayoutManager extends GalleryView.LayoutManager {
             }
 
             if (targetPage != null) {
-                // Cancel all animations
-                cancelAllAnimations();
-                mOffsetY -= targetPage.bounds().top;
+                if (mSnap) {
+                    // Cancel all animations
+                    cancelAllAnimations();
+                    mOffsetY -= targetPage.bounds().top;
+                }
                 // Request fill
                 mGalleryView.requestFill();
             } else {

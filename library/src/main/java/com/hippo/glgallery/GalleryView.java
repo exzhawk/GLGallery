@@ -104,6 +104,7 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
     private static final int METHOD_ON_ATTACH_TO_ROOT = 20;
     private static final int METHOD_SET_PAGER_INTERVAL = 21;
     private static final int METHOD_SET_SCROLL_INTERVAL = 22;
+    private static final int METHOD_SET_SNAP_PAGE_WHEN_SCROLL = 23;
 
     private final Context mContext;
     private Adapter mAdapter;
@@ -126,6 +127,7 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
     private final int mBackgroundColor;
     private int mPagerInterval;
     private int mScrollInterval;
+    private boolean mSnapPageWhenScroll;
     private final int mPageMinHeight;
     private final int mPageInfoInterval;
     private final int mProgressColor;
@@ -179,6 +181,7 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
         private int mEdgeColor = Color.WHITE;
         private int mPagerInterval = 48;
         private int mScrollInterval = 24;
+        private boolean mSnapPageWhenScroll = false;
         private int mPageMinHeight = 256;
         private int mPageInfoInterval = 24;
         private int mProgressColor = Color.WHITE;
@@ -238,6 +241,11 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
 
         public Builder setScrollInterval(int scrollInterval) {
             mScrollInterval = scrollInterval;
+            return this;
+        }
+
+        public Builder setSnapPageWhenScroll(boolean snap) {
+            mSnapPageWhenScroll = snap;
             return this;
         }
 
@@ -318,6 +326,7 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
         mPageMinHeight = build.mPageMinHeight;
         mPagerInterval = build.mPagerInterval;
         mScrollInterval = build.mScrollInterval;
+        mSnapPageWhenScroll = build.mSnapPageWhenScroll;
         mPageInfoInterval = build.mPageInfoInterval;
         mProgressColor = build.mProgressColor;
         mProgressSize = build.mProgressSize;
@@ -342,7 +351,7 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
 
     private void ensureScrollLayoutManager() {
         if (mScrollLayoutManager == null) {
-            mScrollLayoutManager = new ScrollLayoutManager(mContext, this, mScrollInterval);
+            mScrollLayoutManager = new ScrollLayoutManager(mContext, this, mScrollInterval, mSnapPageWhenScroll);
         }
     }
 
@@ -411,6 +420,13 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
         mScrollInterval = interval;
         if (mScrollLayoutManager != null) {
             mScrollLayoutManager.setInterval(interval);
+        }
+    }
+
+    private void setSnapPageWhenScrollInternal(boolean snap){
+        mSnapPageWhenScroll = snap;
+        if (mScrollLayoutManager != null) {
+            mScrollLayoutManager.setSnapPageWhenScroll(snap);
         }
     }
 
@@ -559,6 +575,10 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
 
     public void setScrollInterval(int interval) {
         postMethod(METHOD_SET_SCROLL_INTERVAL, interval);
+    }
+
+    public void setSnapPageWhenScroll(boolean snap){
+        postMethod(METHOD_SET_SNAP_PAGE_WHEN_SCROLL, snap);
     }
 
     @Override
@@ -1024,6 +1044,9 @@ public final class GalleryView extends GLView implements GestureRecognizer.Liste
                     break;
                 case METHOD_SET_SCROLL_INTERVAL:
                     setScrollIntervalInternal((Integer) args[0]);
+                    break;
+                case METHOD_SET_SNAP_PAGE_WHEN_SCROLL:
+                    setSnapPageWhenScrollInternal((Boolean) args[0]);
                     break;
             }
         }
